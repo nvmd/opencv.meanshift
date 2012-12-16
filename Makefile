@@ -13,7 +13,7 @@ main.o: main.cpp
 libmeanshift.so: MeanShift.o
 	$(CXX) $(CXXFLAGS) -shared -o $@ $?
 MeanShift.o: MeanShift.cpp MeanShift.h
-		$(CC) $(CXXFLAGS) -fPIC -c $< -o $@
+	$(CC) $(CXXFLAGS) -fPIC -c $< -o $@
 
 .PHONY: clean
 clean:
