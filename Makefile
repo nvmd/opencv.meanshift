@@ -1,10 +1,20 @@
 LIBS = -lopencv_core -lopencv_imgproc -lopencv_highgui
-CC = g++
-all: main.o MeanShift.o
-	$(CC) main.o MeanShift.o -o main $(LIBS)
+CXX = g++
+CXXFLAGS = -Wall `pkg-config --cflags opencv`
+LDFLAGS = $(LIBS)
+
+all: libmeanshift.so meanshift_demo
+
+meanshift_demo: main.o
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) -Wl,-rpath,. -L . -lmeanshift -o $@ $?
 main.o: main.cpp
-	$(CC) -c main.cpp $(LIBS)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+libmeanshift.so: MeanShift.o
+	$(CXX) $(CXXFLAGS) -shared -o $@ $?
 MeanShift.o: MeanShift.cpp MeanShift.h
-	$(CC) -c MeanShift.cpp $(LIBS)
+		$(CC) $(CXXFLAGS) -fPIC -c $< -o $@
+
+.PHONY: clean
 clean:
-	rm *.o main
+	rm *.o meanshift_demo libmeanshift.so
